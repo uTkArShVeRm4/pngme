@@ -35,12 +35,19 @@ impl TryFrom<&[u8]> for Chunk {
         let data: Vec<u8> = value[8..8 + length as usize].to_vec();
         let crc = u32::from_be_bytes(value[8 + length as usize..].try_into().unwrap());
 
-        Ok(Chunk {
-            length,
-            chunk_type,
-            data,
-            crc,
-        })
+        let crc_expected =
+            Crc::<u32>::new(&CRC_32_ISO_HDLC).checksum(&value[4..8 + length as usize]);
+
+        if crc == crc_expected {
+            Ok(Chunk {
+                length,
+                chunk_type,
+                data,
+                crc,
+            })
+        } else {
+            Err(ChunkError)
+        }
     }
 }
 
