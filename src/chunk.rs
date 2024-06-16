@@ -1,9 +1,6 @@
 use crate::ChunkType;
 use crc::{Crc, CRC_32_ISO_HDLC};
-use std::{
-    fmt::{Display, Formatter},
-    str::FromStr,
-};
+use std::fmt::{Display, Formatter};
 
 pub struct Chunk {
     length: u32,
